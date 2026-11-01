@@ -48,7 +48,7 @@ function Index() {
   const [cart, setCart] = useState(0);
   const [step, setStep] = useState(0);
   const [choice, setChoice] = useState<Record<string, string>>({});
-  const cur = steps[step] ?? steps[0];
+  const cur = steps[step] ?? { key: "Masa", items: [] };
   const preview = getCookiePreview(choice);
   const add = (n = 1) => setCart((c) => c + n);
 
@@ -166,7 +166,7 @@ function Index() {
               {cur.items.map((it, j) => {
                 const sel = choice[cur.key] === it.n;
                 return (
-                  <Button key={it.n} variant="ghost" aria-pressed={sel} onClick={() => setChoice((previous) => ({ ...previous, [cur.key]: it.n }))}
+                  <Button key={it.n} variant="ghost" aria-label={it.n} aria-pressed={sel} onClick={() => setChoice((previous) => ({ ...previous, [cur.key]: it.n }))}
                     style={{ transform: `rotate(${(j - 1) * 8}deg)` }}
                     className={`block h-auto w-36 whitespace-normal rounded-3xl bg-pink-soft p-4 shadow-md transition hover:-translate-y-1 ${sel ? "ring-4 ring-primary" : ""}`}>
                     <img src={it.i} alt={it.n} className="mx-auto h-24 w-full rounded-xl object-cover mix-blend-multiply" />

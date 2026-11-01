@@ -6,8 +6,8 @@ describe('Cookie preview selections', () => {
     expect(getCookiePreview({ Masa: 'Chocolate' }).src).toContain('cookie-chocolate-plain.jpg');
   });
   it('shows each selected topping on the selected dough', () => {
-    for (const [dough, file] of [['Tradicional', 'tradicional'], ['Chocolate', 'chocolate'], ['Red Velvet', 'redvelvet']]) {
-      for (const [topping, suffix] of [['Nuez', 'nuez'], ['Brownie', 'brownie'], ['Chispas', 'chispas']]) {
+    for (const [dough, file] of [['Tradicional', 'tradicional'], ['Chocolate', 'chocolate'], ['Red Velvet', 'redvelvet']] as const) {
+      for (const [topping, suffix] of [['Nuez', 'nuez'], ['Brownie', 'brownie'], ['Chispas', 'chispas']] as const) {
         expect(getCookiePreview({ Masa: dough, Toppings: topping }).src).toContain(`cookie-${file}-${suffix}.jpg`);
       }
     }

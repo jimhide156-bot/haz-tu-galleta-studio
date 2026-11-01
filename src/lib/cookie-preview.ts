@@ -18,10 +18,10 @@ const photos: Record<string, Record<string, string>> = {
 };
 
 export function getCookiePreview(choice: Record<string, string>) {
-  const dough = choice.Masa ?? 'Tradicional';
-  const topping = choice.Toppings ?? 'plain';
+  const dough = choice['Masa'] ?? 'Tradicional';
+  const topping = choice['Toppings'] ?? 'plain';
   return {
     src: photos[dough]?.[topping] ?? traditionalPlain,
-    alt: `Galleta de masa ${dough}${choice.Toppings ? ` con ${choice.Toppings}` : ' sin toppings'}`,
+    alt: `Galleta de masa ${dough}${choice['Toppings'] ? ` con ${choice['Toppings']}` : ' sin toppings'}`,
   };
 }
