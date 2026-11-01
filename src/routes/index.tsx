@@ -47,6 +47,7 @@ function Index() {
   const [cart, setCart] = useState(0);
   const [step, setStep] = useState(0);
   const [choice, setChoice] = useState<Record<string, string>>({});
+  const cur = steps[step]!;
   const add = (n = 1) => setCart((c) => c + n);
 
   return (
@@ -160,10 +161,10 @@ function Index() {
             <button onClick={() => setStep((step + 2) % 3)} aria-label="Anterior" className="absolute left-0 top-1/2 z-10 grid h-12 w-12 place-items-center rounded-full bg-primary/80 text-primary-foreground"><ChevronLeft /></button>
             <button onClick={() => setStep((step + 1) % 3)} aria-label="Siguiente" className="absolute right-0 top-1/2 z-10 grid h-12 w-12 place-items-center rounded-full bg-primary/80 text-primary-foreground"><ChevronRight /></button>
             <div className="flex justify-center gap-5 px-14">
-              {steps[step].items.map((it, j) => {
-                const sel = choice[steps[step].key] === it.n;
+              {cur.items.map((it, j) => {
+                const sel = choice[cur.key] === it.n;
                 return (
-                  <button key={it.n} onClick={() => setChoice({ ...choice, [steps[step].key]: it.n })}
+                  <button key={it.n} onClick={() => setChoice({ ...choice, [cur.key]: it.n })}
                     style={{ transform: `rotate(${(j - 1) * 8}deg)` }}
                     className={`w-36 rounded-3xl bg-pink-soft p-4 shadow-md transition hover:-translate-y-1 ${sel ? "ring-4 ring-primary" : ""}`}>
                     <img src={it.i} alt={it.n} className="mx-auto h-24 w-full rounded-xl object-cover mix-blend-multiply" />
