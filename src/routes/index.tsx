@@ -15,7 +15,8 @@ import chispas from "@/assets/chispas.jpg";
 import nutellafill from "@/assets/nutellafill.jpg";
 import blanco from "@/assets/blanco.jpg";
 import oreofill from "@/assets/oreofill.jpg";
-import big from "@/assets/big.jpg";
+import { getCookiePreview } from "@/lib/cookie-preview";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -47,7 +48,8 @@ function Index() {
   const [cart, setCart] = useState(0);
   const [step, setStep] = useState(0);
   const [choice, setChoice] = useState<Record<string, string>>({});
-  const cur = steps[step]!;
+  const cur = steps[step] ?? { key: "Masa", items: [] };
+  const preview = getCookiePreview(choice);
   const add = (n = 1) => setCart((c) => c + n);
 
   return (
@@ -150,40 +152,40 @@ function Index() {
           </h2>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             {steps.map((s, i) => (
-              <button key={s.key} onClick={() => setStep(i)}
-                className={`rounded-full px-10 py-3 font-display text-xl transition ${step === i ? "bg-primary text-primary-foreground" : "bg-pink-soft/70 text-primary"}`}>
+              <Button key={s.key} onClick={() => setStep(i)} aria-pressed={step === i}
+                className={`h-auto rounded-full px-10 py-3 font-display text-xl transition ${step === i ? "bg-primary text-primary-foreground" : "bg-pink-soft/70 text-primary"}`}>
                 {s.key}
-              </button>
+              </Button>
             ))}
           </div>
 
           <div className="relative mt-10">
-            <button onClick={() => setStep((step + 2) % 3)} aria-label="Anterior" className="absolute left-0 top-1/2 z-10 grid h-12 w-12 place-items-center rounded-full bg-primary/80 text-primary-foreground"><ChevronLeft /></button>
-            <button onClick={() => setStep((step + 1) % 3)} aria-label="Siguiente" className="absolute right-0 top-1/2 z-10 grid h-12 w-12 place-items-center rounded-full bg-primary/80 text-primary-foreground"><ChevronRight /></button>
+            <Button onClick={() => setStep((step + 2) % 3)} aria-label="Anterior" size="icon" className="absolute left-0 top-1/2 z-10 grid h-12 w-12 place-items-center rounded-full bg-primary/80 text-primary-foreground"><ChevronLeft /></Button>
+            <Button onClick={() => setStep((step + 1) % 3)} aria-label="Siguiente" size="icon" className="absolute right-0 top-1/2 z-10 grid h-12 w-12 place-items-center rounded-full bg-primary/80 text-primary-foreground"><ChevronRight /></Button>
             <div className="flex justify-center gap-5 px-14">
               {cur.items.map((it, j) => {
                 const sel = choice[cur.key] === it.n;
                 return (
-                  <button key={it.n} onClick={() => setChoice({ ...choice, [cur.key]: it.n })}
+                  <Button key={it.n} variant="ghost" aria-label={it.n} aria-pressed={sel} onClick={() => setChoice((previous) => ({ ...previous, [cur.key]: it.n }))}
                     style={{ transform: `rotate(${(j - 1) * 8}deg)` }}
-                    className={`w-36 rounded-3xl bg-pink-soft p-4 shadow-md transition hover:-translate-y-1 ${sel ? "ring-4 ring-primary" : ""}`}>
+                    className={`block h-auto w-36 whitespace-normal rounded-3xl bg-pink-soft p-4 shadow-md transition hover:-translate-y-1 ${sel ? "ring-4 ring-primary" : ""}`}>
                     <img src={it.i} alt={it.n} className="mx-auto h-24 w-full rounded-xl object-cover mix-blend-multiply" />
                     <p className="mt-2 font-display font-semibold text-primary">{it.n}</p>
-                  </button>
+                  </Button>
                 );
               })}
             </div>
-            <img src={big} alt="Tu galleta" loading="lazy" className="mx-auto mt-8 w-full max-w-md rounded-[3rem] mix-blend-multiply" />
+            <img src={preview.src} alt={preview.alt} loading="lazy" width={768} height={768} className="mx-auto mt-8 aspect-square w-full max-w-md rounded-[3rem] object-cover mix-blend-multiply" />
             <div className="mt-6 flex justify-center gap-3">
               {steps.map((s, i) => <span key={s.key} className={`h-3 w-3 rounded-full ${step === i ? "bg-primary" : "bg-pink-deep"}`} />)}
             </div>
             <p className="mt-6 text-muted-foreground">
               {steps.map((s) => `${s.key}: ${choice[s.key] ?? "—"}`).join("  ·  ")}
             </p>
-            <button disabled={steps.some((s) => !choice[s.key])} onClick={() => { add(); setChoice({}); setStep(0); }}
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-semibold text-primary-foreground transition hover:scale-105 disabled:opacity-40">
+            <Button disabled={steps.some((s) => !choice[s.key])} onClick={() => { add(); setChoice({}); setStep(0); }}
+              className="mt-4 inline-flex h-auto items-center gap-2 rounded-full bg-primary px-8 py-3 font-semibold text-primary-foreground transition hover:scale-105 disabled:opacity-40">
               <ShoppingCart className="h-5 w-5" /> Agregar mi galleta
-            </button>
+            </Button>
           </div>
         </div>
       </section>
